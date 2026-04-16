@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+oracledb
+python-dotenv
+PyJWT[crypto]
+passlib[bcrypt]
+email-validator
