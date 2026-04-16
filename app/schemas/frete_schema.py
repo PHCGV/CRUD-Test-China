@@ -1,8 +1,9 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Optional, List
 
 class FreteBase(BaseModel):
-    nome: str
+    nome: str = Field(min_length=2, max_length=200)
+    servico: str = Field(min_length=2, max_length=120)
     valor_100g: float
     valor_100g_plus: float
     
@@ -18,4 +19,9 @@ class FreteResponse(FreteBase):
     
     class Config:
         from_attributes = True
+
+
+class ModalidadeResponse(BaseModel):
+    id_modalidade: int
+    nome_modalidade: str
     

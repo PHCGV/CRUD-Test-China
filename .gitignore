@@ -1,5 +1,87 @@
-.env
+# Python
 __pycache__/
-*.pyc
+*.py[cod]
 *.pyo
 *.pyd
+*.pyc
+.venv/
+venv/
+ENV/
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# VSCode
+.vscode/
+.history/
+
+# Node/Vite/React
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
+!frontend/.env.*.example
+
+# Chrome Extension build artifacts
+extension/node_modules/
+extension/dist/
+extension/.env
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test/coverage
+coverage/
+*.cover
+*.log
+*scripts/
+
+# Misc
+*.sqlite3
+*.db
+*.bak
+*.swp
+*.swo
+
+# Ignore test output
+.pytest_cache/
+
+# Ignore PowerShell history
+*.pshistory
+
+# Ignore JetBrains IDEs
+.idea/
+
+# Ignore test snapshots
+frontend/tests/__snapshots__/
+
+# Docker local data
+oracle-data/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
