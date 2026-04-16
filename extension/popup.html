@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CityChina Saver</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main class="popup">
+      <h1>CityChina Saver</h1>
+
+      <section class="card">
+        <h2>Sessão</h2>
+        <p id="sessionText">Não autenticado.</p>
+        <p class="status">Para evitar novo login, use "Conectar extensao" no sistema principal.</p>
+
+        <label for="usernameInput">Usuário</label>
+        <input id="usernameInput" type="text" autocomplete="username" />
+
+        <label for="passwordInput">Senha</label>
+        <input id="passwordInput" type="password" autocomplete="current-password" />
+
+        <div class="actions">
+          <button id="loginBtn" type="button">Entrar</button>
+          <button id="logoutBtn" type="button" class="ghost">Sair</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Configuração</h2>
+
+        <label for="apiBaseInput">API base</label>
+        <input id="apiBaseInput" type="text" />
+
+        <label for="modalidadeInput">ID modalidade padrao</label>
+        <input id="modalidadeInput" type="number" min="1" step="1" />
+
+        <label for="pesoInput">Peso padrão (g)</label>
+        <input id="pesoInput" type="number" min="1" step="1" />
+
+        <label for="valorInput">Valor padrão (yuan)</label>
+        <input id="valorInput" type="number" min="0.01" step="0.01" />
+
+        <div class="actions">
+          <button id="saveConfigBtn" type="button">Salvar config</button>
+        </div>
+      </section>
+
+      <p id="statusText" class="status"></p>
+    </main>
+
+    <script src="popup.js"></script>
+  </body>
+  </html>
