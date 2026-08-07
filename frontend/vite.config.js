@@ -24,6 +24,9 @@ export default defineConfig(({ mode }) => {
         '/vendedor': apiProxyTarget,
         '/usuario': apiProxyTarget,
       },
+      allowedHosts: [
+        'aspire-banner-neutron.ngrok-free.dev'
+      ],
     },
   }
 })

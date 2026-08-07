@@ -439,6 +439,27 @@ body {
   margin: 0;
   font-size: 1rem;
 }
+.vendor-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.last-accessed-badge {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  border: 1px solid #b8d5c7;
+  border-radius: 999px;
+  padding: 3px 7px;
+  background: #eef8f1;
+  color: #28623f;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+}
 
 .vendor-card p {
   margin: 8px 0;
@@ -499,6 +520,16 @@ body {
 .danger-btn:hover {
   border-color: #c15353;
   color: #7a2020;
+}
+
+.success-btn {
+  border-color: #5ab478;
+  color: #00b13b;
+}
+
+.success-btn:hover {
+  border-color: #2ebd5d;
+  color: #00862d;
 }
 
 .product-card {
