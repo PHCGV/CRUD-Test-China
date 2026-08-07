@@ -228,6 +228,12 @@ function App() {
   const [simulacaoResultado, setSimulacaoResultado] = useState(null)
   const [simulacaoError, setSimulacaoError] = useState('')
   const [simulandoFrete, setSimulandoFrete] = useState(false)
+  const [ultimoVendedorAcessadoId, setUltimoVendedorAcessadoId] = useState(null)
+
+  const getUltimoVendedorStorageKey = useCallback(() => {
+    const idUsuario = currentUser?.id_usuario
+    return idUsuario ? 'ultimo_vendedor_acessado:' + idUsuario : null
+  }, [currentUser?.id_usuario])
 
   function persistToken(value) {
     setToken(value)
@@ -279,6 +285,21 @@ function App() {
     setCurrentUser(me)
     return true
   }, [clearAuth, token])
+
+  useEffect(() => {
+    const storageKey = getUltimoVendedorStorageKey()
+    if (!storageKey) {
+      setUltimoVendedorAcessadoId(null)
+      return
+    }
+
+    try {
+      const idVendedor = Number(localStorage.getItem(storageKey))
+      setUltimoVendedorAcessadoId(Number.isInteger(idVendedor) && idVendedor > 0 ? idVendedor : null)
+    } catch {
+      setUltimoVendedorAcessadoId(null)
+    }
+  }, [getUltimoVendedorStorageKey])
 
   function estimateFreight(produto) {
     if (!fretes.length) {
@@ -651,11 +672,34 @@ function App() {
       if (editVendedorId === idVendedor) {
         onCancelEditVendedor()
       }
+      if (ultimoVendedorAcessadoId === idVendedor) {
+        const storageKey = getUltimoVendedorStorageKey()
+        setUltimoVendedorAcessadoId(null)
+        try {
+          if (storageKey) localStorage.removeItem(storageKey)
+        } catch {
+          // Vendor deletion does not depend on local storage.
+        }
+      }
       setEditVendedorMessage('Vendedor removido com sucesso.')
       setRefreshSeed((seed) => seed + 1)
     } finally {
       setDeletingVendedorId(null)
     }
+  }
+
+  function onOpenVendedor(vendedor) {
+    const idVendedor = vendedor.id_vendedor
+    const storageKey = getUltimoVendedorStorageKey()
+
+    setUltimoVendedorAcessadoId(idVendedor)
+    try {
+      if (storageKey) localStorage.setItem(storageKey, String(idVendedor))
+    } catch {
+      // A abertura da loja continua disponível caso o navegador bloqueie o armazenamento local.
+    }
+
+    window.open(vendedor.link_loja, 'blank', 'noopener')
   }
 
   async function onCreateProduto(event) {
@@ -1580,9 +1624,6 @@ function App() {
                         ) : (
                           <div className="card-content">
                             <h3 className="product-name">{safeText(produto.nome)}</h3>
-                            <a className="product-link" href={safeText(produto.link_produto, '#')} target="_blank" rel="noreferrer">
-                              Ver anuncio
-                            </a>
 
                             <div className="price-row">
                               <div>
@@ -1605,7 +1646,16 @@ function App() {
                               <p>{`Melhor opcao: ${frete.metodo}`}</p>
                             </div>
 
+                            <div className='freight-box'>
+                              <small>Valor total: </small>
+                              <strong>{currency.format(Number.isFinite(Number(frete.valor) + Number(preco)) ? 
+                                (Number(frete.valor) + Number(preco)) : 0)} </strong>
+                            </div>
+
                             <div className="product-actions">
+                              <button type="button" className="ghost-btn success-btn" onClick={() => window.open(produto.link_produto, 'blank', 'noopener')}>
+                              Abrir
+                            </button>
                               <button type="button" className="ghost-btn" onClick={() => onStartEditProduto(produto)}>
                                 Editar
                               </button>
@@ -1783,17 +1833,19 @@ function App() {
                         </form>
                       ) : (
                         <>
-                          <h3>{safeText(vendedor.nome)}</h3>
+                          <div className="vendor-title">
+                            <h3>{safeText(vendedor.nome)}</h3>
+                            {ultimoVendedorAcessadoId === vendedor.id_vendedor ? (
+                              <span className="last-accessed-badge">Último acessado</span>
+                            ) : null}
+                          </div>
                           <p>{`Loja: ${safeText(vendedor.loja)}`}</p>
-                          {vendedor.link_loja ? (
-                            <a href={vendedor.link_loja} target="_blank" rel="noreferrer">
-                              Abrir loja
-                            </a>
-                          ) : (
-                            <small>Sem link de loja cadastrado.</small>
-                          )}
+                          
 
                           <div className="vendor-actions">
+                            <button type="button" className="ghost-btn success-btn" onClick={() => onOpenVendedor(vendedor)}>
+                              Abrir
+                            </button>
                             <button type="button" className="ghost-btn" onClick={() => onStartEditVendedor(vendedor)}>
                               Editar
                             </button>

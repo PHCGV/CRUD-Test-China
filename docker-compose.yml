@@ -2,6 +2,7 @@ name: citychina-local
 
 services:
   oracle:
+    profiles: ["local-oracle"]
     build:
       context: .
       dockerfile: docker/oracle/Dockerfile
@@ -35,10 +36,10 @@ services:
       dockerfile: Dockerfile
     container_name: citychina-backend
     environment:
-      ORACLE_USER: ${ORACLE_APP_USER:-CHINA}
-      ORACLE_PASSWORD: ${ORACLE_APP_PASSWORD:-citychina_dev_password}
-      ORACLE_DSN: ${ORACLE_DSN:-oracle:1521/XEPDB1}
-      JWT_SECRET_KEY: ${JWT_SECRET_KEY:-change_this_jwt_secret_key_for_local_docker_123456}
+      ORACLE_USER: ${ORACLE_USER:-CHINA}
+      ORACLE_PASSWORD: ${ORACLE_PASSWORD:-citychina_dev_password}
+      ORACLE_DSN: ${ORACLE_DSN:-host.docker.internal:1521/XEPDB1}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
       JWT_ALGORITHM: ${JWT_ALGORITHM:-HS256}
       JWT_ACCESS_TOKEN_EXPIRE_MINUTES: ${JWT_ACCESS_TOKEN_EXPIRE_MINUTES:-120}
       JWT_EXTENSION_TOKEN_EXPIRE_MINUTES: ${JWT_EXTENSION_TOKEN_EXPIRE_MINUTES:-120}
@@ -49,11 +50,8 @@ services:
       ALLOWED_HOSTS: ${ALLOWED_HOSTS:-localhost,127.0.0.1,backend,frontend}
       CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:5173,http://127.0.0.1:5173}
       APP_PUBLIC_URL: ${APP_PUBLIC_URL:-http://localhost:5173}
-    depends_on:
-      oracle:
-        condition: service_healthy
     ports:
-      - "8050:8050"
+      - "${BACKEND_HOST_PORT:-8050}:8050"
     healthcheck:
       test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8050/', timeout=5)\""]
       interval: 15s
@@ -70,7 +68,7 @@ services:
       backend:
         condition: service_healthy
     ports:
-      - "5173:80"
+      - "${FRONTEND_HOST_PORT:-5173}:80"
     healthcheck:
       test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1/ || exit 1"]
       interval: 20s
